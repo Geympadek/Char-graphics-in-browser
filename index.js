@@ -35,25 +35,25 @@ class Line
 {
     a;
     b;
-    
     constructor(a, b)
     {
         this.a = a;
         this.b = b;
     }
+    //Bresenham's rasterization algorithm
     draw()
     {
-        let pixelA = new Point(this.a.x * symbolWidth, this.a.y * symbolWidth);
-        let pixelB = new Point(this.b.x * symbolWidth, this.b.y * symbolWidth);
+        let p0 = new Point(this.a.x * symbolWidth, this.a.y * symbolWidth);
+        let p1 = new Point(this.b.x * symbolWidth, this.b.y * symbolWidth);
 
-        let d = new Point(Math.abs(pixelA.x - pixelB.x), Math.abs(pixelA.y - pixelB.y));
-        let s = new Point((pixelA.x < pixelB.x) ? 1 : -1, (pixelA.y < pixelB.y) ? 1 : -1);
+        let d = new Point(Math.abs(p0.x - p1.x), Math.abs(p0.y - p1.y));
+        let s = new Point((p0.x < p1.x) ? 1 : -1, (p0.y < p1.y) ? 1 : -1);
 
         let error = d.x - d.y;
-        let x = pixelA.x;
-        let y = pixelA.y;
+        let x = p0.x;
+        let y = p0.y;
 
-        while (x != pixelB.x || y != pixelB.y)
+        while (x != p1.x || y != p1.y)
         {
             pixels[getPixelIndex(x, y)] = true;
 
@@ -69,7 +69,6 @@ class Line
                 y += s.y;
             }
         }
-        
         pixels[getPixelIndex(x, y)] = true;
     }
 }
@@ -95,14 +94,14 @@ function fillWith(filler)
         {
             screenOutput += filler;
         }
-        screenOutput += "\n";
+        screenOutput += "<br>";
     }   
 }
 
 function symbolFromBrightness(brightness)
 {
     //const brightnessSymbols = " .:-=+*#@";
-    const brightnessSymbols = ["&emsp;", ".", ":", "-", "=", "+", "*", "#", "@"];
+    const brightnessSymbols = [" ", ".", ":", "-", "=", "+", "*", "#", "@"];
 
     if (brightness == 0)
     {
