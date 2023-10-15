@@ -27,14 +27,18 @@ class Line
     b;
     constructor(a, b)
     {
+        if (typeof a !== "object" || typeof b !== "object")
+        {
+            throw new Error("Arguments should be of type \"object\"");
+        }
         this.a = a;
         this.b = b;
     }
     //Bresenham's rasterization algorithm
     draw()
     {
-        let p0 = { x: this.a.x * symbolWidth, y: this.a.y * symbolWidth};
-        let p1 = { x: this.b.x * symbolWidth, y: this.b.y * symbolWidth};
+        let p0 = { x: Math.round(this.a.x * symbolWidth), y: Math.round(this.a.y * symbolWidth)};
+        let p1 = { x: Math.round(this.b.x * symbolWidth), y: Math.round(this.b.y * symbolWidth)};
 
         let d = { x: Math.abs(p0.x - p1.x), y: Math.abs(p0.y - p1.y)};
         let s = { x: (p0.x < p1.x) ? 1 : -1, y: (p0.y < p1.y) ? 1 : -1};
@@ -61,17 +65,56 @@ class Line
         }
         pixels[getPixelIndex(x, y)] = true;
     }
+
+    rotateAround(center, angle)
+    {
+        return new Line(rotatePointAround(this.a, center, angle), rotatePointAround(this.b, center, angle));
+    }
 }
+
+/*class Triangle
+{
+    a;
+    b;
+    c;
+    constructor(a, b, c)
+    {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+}*/
 
 function edgeFunction(a, b, p)
 {
     return (a.y - b.y) * (p.x - a.x) - (b.x - a.x) * (a.y - p.y);
 }
 
+const DEG_TO_RADIANS = 0.017453292;
+
+function rotatePointAround(point, center, angle)
+{
+    angle *= DEG_TO_RADIANS;
+
+    let cosAngle = Math.cos(angle);
+    let sinAngle = Math.sin(angle);
+
+    let rotatedPoint = {
+        x: cosAngle * (point.x - center.x) - sinAngle * (point.y - center.y) + center.x,
+        y: sinAngle * (point.x - center.x) + cosAngle * (point.y - center.y) + center.y  
+    };
+    return rotatedPoint;
+}
+
 function getPixelIndex(x, y)
 {
     let index = x + y * pixelWidth;
     index = Math.round(index);
+    
+    if (index < 0 || index > numOfSymbols * pixelsPerSymbol)
+    {
+        return numOfSymbols * pixelsPerSymbol;
+    }
     return index;
 }
 
@@ -144,12 +187,13 @@ function loop()
     pixels.fill(false);
     tick++;
 
-    let line = new Line(center, { x: center.x + Math.floor(Math.cos(tick / 200) * lineLength), y: center.y +  Math.floor(Math.sin(tick / 200) * lineLength)});
-    line.draw();
-    
+    let l = new Line({x: center.x - 20, y: center.y - 18}, {x: center.x + 11, y: center.y + 10});
+    l.rotateAround(center, tick).draw();
+    l.rotateAround(l.a, tick * 10).draw();
+
     pixelsToScreen();
     document.getElementById("screen").innerHTML = screenOutput;
 
-    setTimeout(loop, 1 / 30);
+    setTimeout(loop, 1000 / 60);
 }
 loop();
