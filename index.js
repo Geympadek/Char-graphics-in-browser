@@ -1,35 +1,25 @@
-var screenOutput = "W";
-var pixels;
+var screenOutput = "W";//Basically text that is shown in the paragraph
+var pixels;//Hidden array of boolean values. Important for rasterization.
 
-const symbolWidth = 2;
-const symbolHeight = 4;
+const symbolWidth = 2; //Width of one character in pixels
+const symbolHeight = 4; //Height of one character in pixels
 
 const pixelsPerSymbol = symbolHeight * symbolWidth;
 
-const width = 140;
-const height = 30;
+const numOfColumns = 140;
+const numOfRows = 30;
 
-pixels = new Array(width * height * pixelsPerSymbol);
+const numOfSymbols = numOfColumns * numOfRows;
+
+pixels = new Array(numOfSymbols * pixelsPerSymbol);
 pixels.fill(false);
 
-const pixelWidth = width * symbolWidth;
-const pixelHeight = height * symbolHeight;
+const pixelWidth = numOfColumns * symbolWidth;//number of pixels from left to right
+const pixelHeight = numOfRows * symbolHeight;//number of pixels from top to bottom
 
 const coordPerPixel = 1 / symbolWidth;
 
-class Point 
-{
-    x;
-    y;
-
-    constructor(x, y) 
-    {
-        this.x = x;
-        this.y = y;
-    }
-}
-const center = new Point(pixelWidth * coordPerPixel / 2, pixelHeight * coordPerPixel / 2);
-
+const center = { x: pixelWidth * coordPerPixel / 2, y: pixelHeight * coordPerPixel / 2 };
 
 class Line 
 {
@@ -43,11 +33,11 @@ class Line
     //Bresenham's rasterization algorithm
     draw()
     {
-        let p0 = new Point(this.a.x * symbolWidth, this.a.y * symbolWidth);
-        let p1 = new Point(this.b.x * symbolWidth, this.b.y * symbolWidth);
+        let p0 = { x: this.a.x * symbolWidth, y: this.a.y * symbolWidth};
+        let p1 = { x: this.b.x * symbolWidth, y: this.b.y * symbolWidth};
 
-        let d = new Point(Math.abs(p0.x - p1.x), Math.abs(p0.y - p1.y));
-        let s = new Point((p0.x < p1.x) ? 1 : -1, (p0.y < p1.y) ? 1 : -1);
+        let d = { x: Math.abs(p0.x - p1.x), y: Math.abs(p0.y - p1.y)};
+        let s = { x: (p0.x < p1.x) ? 1 : -1, y: (p0.y < p1.y) ? 1 : -1};
 
         let error = d.x - d.y;
         let x = p0.x;
@@ -88,9 +78,9 @@ function getPixelIndex(x, y)
 function fillWith(filler)
 {
     screenOutput = "";
-    for (let l = 0; l < height; l++)
+    for (let l = 0; l < numOfRows; l++)
     {
-        for (let e = 0; e < width; e++)
+        for (let e = 0; e < numOfColumns; e++)
         {
             screenOutput += filler;
         }
@@ -136,9 +126,9 @@ function pixelsToScreen()
 {
     screenOutput = "";
 
-    for (let y = 0; y < height; y++)
+    for (let y = 0; y < numOfRows; y++)
     {
-        for (let x = 0; x < width; x++)
+        for (let x = 0; x < numOfColumns; x++)
         {
             let brightness = brightnessFromPixels(x, y);
             screenOutput += symbolFromBrightness(brightness);
@@ -154,7 +144,7 @@ function loop()
     pixels.fill(false);
     tick++;
 
-    let line = new Line(center, new Point(center.x + Math.floor(Math.cos(tick / 200) * lineLength), center.y +  Math.floor(Math.sin(tick / 200) * lineLength)));
+    let line = new Line(center, { x: center.x + Math.floor(Math.cos(tick / 200) * lineLength), y: center.y +  Math.floor(Math.sin(tick / 200) * lineLength)});
     line.draw();
     
     pixelsToScreen();
@@ -162,7 +152,4 @@ function loop()
 
     setTimeout(loop, 1 / 30);
 }
-
 loop();
-
-//let line = new Line(center, new Point((width - 1) * Math.random(), (height - 1) * Math.random()));
