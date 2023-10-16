@@ -88,14 +88,12 @@ class Triangle
     {
         let points = sortVertices(this.a, this.b, this.c);
 
-        points[0].x /= coordPerPixel;
-        points[0].y /= coordPerPixel;
-        
-        points[1].x /= coordPerPixel;
-        points[1].y /= coordPerPixel;
-
-        points[2].x /= coordPerPixel;
-        points[2].y /= coordPerPixel;
+        points[0].x = Math.floor(points[0].x / coordPerPixel);
+        points[0].y = Math.floor(points[0].y / coordPerPixel);
+        points[1].x = Math.floor(points[1].x / coordPerPixel);
+        points[1].y = Math.floor(points[1].y / coordPerPixel);
+        points[2].x = Math.floor(points[2].x / coordPerPixel);
+        points[2].y = Math.floor(points[2].y / coordPerPixel);
 
         //define bounding box
         let start = {x: Math.round(Math.min(points[0].x, points[1].x, points[2].x)), y: Math.round(Math.min(points[0].y, points[1].y, points[2].y))};
@@ -266,14 +264,18 @@ function pixelsToScreen()
 }
 
 let tick = 0;
-let lineLength = 20;
+let triangleLength = 25;
 function loop()
 {
     pixels.fill(false);
     tick++;
 
-    let t = new Triangle({x:20, y:50}, {x:10, y:10}, {x:100, y: 20});
-    t.rotateAroundItself(tick).draw();
+    let t = new Triangle(
+        {x:center.x + Math.cos(DEG_TO_RADIANS * 0) * triangleLength,   y:center.y + Math.sin(DEG_TO_RADIANS * 0) * triangleLength}, 
+        {x:center.x + Math.cos(DEG_TO_RADIANS * 120) * triangleLength,  y:center.y + Math.sin(DEG_TO_RADIANS * 120) * triangleLength}, 
+        {x:center.x + Math.cos(DEG_TO_RADIANS * 240) * triangleLength, y:center.y + Math.sin(DEG_TO_RADIANS * 240) * triangleLength});
+
+    t.rotateAround(center, tick * 2).draw();
 
     pixelsToScreen();
     document.getElementById("screen").innerHTML = screenOutput;
