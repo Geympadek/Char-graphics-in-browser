@@ -10,8 +10,9 @@ const numOfColumns = 140;
 const numOfRows = 30;
 
 const numOfSymbols = numOfColumns * numOfRows;
+const numOfPixels = numOfSymbols * pixelsPerSymbol;
 
-pixels = new Array(numOfSymbols * pixelsPerSymbol);
+pixels = new Array(numOfPixels);
 pixels.fill(false);
 
 const pixelWidth = numOfColumns * symbolWidth;//number of pixels from left to right
@@ -37,8 +38,8 @@ class Line
     //Bresenham's rasterization algorithm
     draw()
     {
-        let p0 = { x: Math.round(this.a.x * symbolWidth), y: Math.round(this.a.y * symbolWidth)};
-        let p1 = { x: Math.round(this.b.x * symbolWidth), y: Math.round(this.b.y * symbolWidth)};
+        let p0 = { x: Math.round(this.a.x / coordPerPixel), y: Math.round(this.a.y / coordPerPixel)};
+        let p1 = { x: Math.round(this.b.x / coordPerPixel), y: Math.round(this.b.y / coordPerPixel)};
 
         let d = { x: Math.abs(p0.x - p1.x), y: Math.abs(p0.y - p1.y)};
         let s = { x: (p0.x < p1.x) ? 1 : -1, y: (p0.y < p1.y) ? 1 : -1};
@@ -72,7 +73,7 @@ class Line
     }
 }
 
-/*class Triangle
+class Triangle
 {
     a;
     b;
@@ -83,7 +84,86 @@ class Line
         this.b = b;
         this.c = c;
     }
-}*/
+    draw()
+    {
+        let points = sortVertices(this.a, this.b, this.c);
+
+        points[0].x /= coordPerPixel;
+        points[0].y /= coordPerPixel;
+        
+        points[1].x /= coordPerPixel;
+        points[1].y /= coordPerPixel;
+
+        points[2].x /= coordPerPixel;
+        points[2].y /= coordPerPixel;
+
+        //define bounding box
+        let start = {x: Math.round(Math.min(points[0].x, points[1].x, points[2].x)), y: Math.round(Math.min(points[0].y, points[1].y, points[2].y))};
+        let end = {x: Math.round(Math.max(points[0].x, points[1].x, points[2].x)), y: Math.round(Math.max(points[0].y, points[1].y, points[2].y))};
+
+        for (let i = start.x; i <= end.x; i++)
+        {
+            for (let j = start.y; j <= end.y; j++)
+            {
+                if (this.checkIfInside({x: i, y: j}))
+                {
+                    pixels[getPixelIndex(i, j)] = true;
+                }
+            }
+        }
+    }
+    checkIfInside(point)
+    {
+        if (edgeFunction(this.a, this.b, point) < 0)
+        {
+            return false;
+        }
+        if (edgeFunction(this.b, this.c, point) < 0)
+        {
+            return false;
+        }
+        if (edgeFunction(this.c, this.a, point) < 0)
+        {
+            return false;
+        }
+        return true;
+    }
+    rotateAround(center, angle)
+    {
+        return new Triangle(
+            rotatePointAround(this.a, center, angle),
+            rotatePointAround(this.b, center, angle),
+            rotatePointAround(this.c, center, angle)
+        );
+    }
+    rotateAroundItself(angle)
+    {
+        return this.rotateAround(this.findCentroid(), angle);
+    }
+    findCentroid()
+    {
+        return {
+            x: (this.a.x + this.b.x + this.c.x) / 3,
+            y: (this.a.y + this.b.y + this.c.y) / 3 };
+    }
+}
+
+function sortVertices(a, b, c)
+{
+    let d1 = {x: b.x - a.x, y: b.y - a.y};
+    let d2 = {x: c.x - a.x, y: c.y - a.y};
+
+    if (calculateCrossProduct(d1, d2) < 0)
+    {
+        [b, c] = [c, b];
+    }
+    return [a, b, c];
+}
+
+function calculateCrossProduct(a, b)
+{
+    return a.x * b.y - a.y * b.x;
+}
 
 function edgeFunction(a, b, p)
 {
@@ -108,13 +188,18 @@ function rotatePointAround(point, center, angle)
 
 function getPixelIndex(x, y)
 {
+    if (x < 0 || x > pixelWidth)
+    {
+        return numOfPixels;
+    }
+    if (y < 0 || y > pixelHeight)
+    {
+        return numOfPixels;
+    }
+
     let index = x + y * pixelWidth;
     index = Math.round(index);
     
-    if (index < 0 || index > numOfSymbols * pixelsPerSymbol)
-    {
-        return numOfSymbols * pixelsPerSymbol;
-    }
     return index;
 }
 
@@ -187,9 +272,8 @@ function loop()
     pixels.fill(false);
     tick++;
 
-    let l = new Line({x: center.x - 20, y: center.y - 18}, {x: center.x + 11, y: center.y + 10});
-    l.rotateAround(center, tick).draw();
-    l.rotateAround(l.a, tick * 10).draw();
+    let t = new Triangle({x:20, y:50}, {x:10, y:10}, {x:100, y: 20});
+    t.rotateAroundItself(tick).draw();
 
     pixelsToScreen();
     document.getElementById("screen").innerHTML = screenOutput;
