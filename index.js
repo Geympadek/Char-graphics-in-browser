@@ -341,12 +341,21 @@ function clearScreen()
 
 let tick = 0;
 let triangleLength = 25;
+
+let sprite = new Sprite([0,2, 0.5,1, 0.5,2,     0,0, 0.5,0, 0.5,1,      0.5,0, 3,0, 0.5,2,      3,0, 3,2, 0.5,2,  3,0, 4,1, 3,2], {x: center.x / 1, y: center.y / 2}, 5, 0);
+
 function loop()
 {
     clearScreen();
     tick++;
+    
+    let rocketSpeed = 3;
+    rocketSpeed /= 10;
 
-    let sprite = new Sprite([0,2, 1,1, 1,2,     0,0, 1,0, 1,1,      1,0, 3,0, 1,2,      3,0, 3,2, 1,2,  3,0, 4,1, 3,2], center, 3.5, tick * 2);
+    sprite.rotation = tick;
+    sprite.position.x += Math.cos((sprite.rotation) * DEG_TO_RADIANS) * rocketSpeed;
+    sprite.position.y += Math.sin((sprite.rotation) * DEG_TO_RADIANS) * rocketSpeed;
+
     sprite.draw();
 
     //rendering and rasterization
