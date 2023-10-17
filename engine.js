@@ -68,3 +68,64 @@ class Sprite
         return {x: (minx + maxx) / 2 * this.scale + this.position.x, y: (miny + maxy) / 2 * this.scale + this.position.y};
     }
 }
+
+var player =
+{
+    input: {left: false, up: false, right: false, down: false, fire: false}
+}
+
+document.addEventListener("keydown", onkeydown, false);
+document.addEventListener("keyup", onkeyup, false);
+
+const KEY =
+{
+    W: 87,
+    A: 65,
+    S: 83,
+    D: 68,
+    F: 70
+}
+
+function onkeydown(event)
+{
+    switch (event.keyCode)
+    {
+        case KEY.W:
+            player.input.up = true;
+            break;
+        case KEY.A:
+            player.input.left = true;
+            break;
+        case KEY.S:
+            player.input.down = true;
+            break;
+        case KEY.D:
+            player.input.right = true;
+            break;
+        case KEY.F:
+            player.input.fire = true;
+            break;
+    }
+}
+
+function onkeyup(event)
+{
+    switch (event.keyCode)
+    {
+        case KEY.W:
+            player.input.up = false;
+            break;
+        case KEY.A:
+            player.input.left = false;
+            break;
+        case KEY.S:
+            player.input.down = false;
+            break;
+        case KEY.D:
+            player.input.right = false;
+            break;
+        case KEY.F:
+            player.input.fire = false;
+            break;
+    }
+}
