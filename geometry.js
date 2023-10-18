@@ -162,13 +162,16 @@ class Circle
 
     draw()
     {
-        let start = {x: this.center.x - this.radius, y: this.center.y - this.radius};
-        let end = {x: this.center.x + this.radius, y: this.center.y + this.radius};
+        let center = {x: this.center.x / coordPerPixel, y: this.center.y / coordPerPixel};
+        let radius = this.radius / coordPerPixel;
 
-        start.x = Math.floor(start.x / coordPerPixel);
-        start.y = Math.floor(start.y / coordPerPixel);
-        end.x = Math.floor(end.x / coordPerPixel);
-        end.y = Math.floor(end.y / coordPerPixel);
+        let start = {x: center.x - radius, y: center.y - radius};
+        let end = {x: center.x + radius, y: center.y + radius};
+
+        start.x = Math.floor(start.x);
+        start.y = Math.floor(start.y);
+        end.x = Math.floor(end.x);
+        end.y = Math.floor(end.y);
 
         for (let x = start.x; x <= end.x; x++)
         {
@@ -178,7 +181,7 @@ class Circle
                 let yLeg= Math.abs(center.y - y);
 
                 let distance = Math.sqrt(xLeg * xLeg + yLeg * yLeg);
-                if (distance <= this.radius / coordPerPixel)
+                if (distance <= radius)
                 {
                     pixels[getPixelIndex(x, y)] = true; 
                 }
