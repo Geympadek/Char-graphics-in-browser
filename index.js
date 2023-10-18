@@ -35,6 +35,9 @@ function loop()
         sprite.rotation += rotationSpeed;
     }
 
+    let circle = new Circle(center, 15);
+    circle.draw();
+
     //rendering and rasterization
     pixelsToScreen();
     document.getElementById("screen").innerHTML = screenOutput;

@@ -148,3 +148,37 @@ class Triangle
             y: (this.a.y + this.b.y + this.c.y) / 3 };
     }
 }
+
+class Circle
+{
+    center;
+    radius;
+
+    constructor(center, radius)
+    {
+        this.center = center;
+        this.radius = radius;
+    }
+
+    draw()
+    {
+        let start = {x: this.center.x - this.radius, y: this.center.y - this.radius};
+        let end = {x: this.center.x + this.radius, y: this.center.y + this.radius};
+
+        start.x = Math.floor(start.x);
+        start.y = Math.floor(start.y);
+        end.x = Math.floor(end.x);
+        end.y = Math.floor(end.y);
+
+        for (let x = start.x; x <= end.x; x++)
+        {
+            for (let y = start.y; y <= end.y; y++)
+            {
+                if (Math.abs(x - this.center.x) + Math.abs(y - this.center.y) <= this.radius)
+                {
+                    pixels[getPixelIndex(x, y)] = true;
+                }
+            }
+        }
+    }
+}
