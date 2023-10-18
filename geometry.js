@@ -165,18 +165,22 @@ class Circle
         let start = {x: this.center.x - this.radius, y: this.center.y - this.radius};
         let end = {x: this.center.x + this.radius, y: this.center.y + this.radius};
 
-        start.x = Math.floor(start.x);
-        start.y = Math.floor(start.y);
-        end.x = Math.floor(end.x);
-        end.y = Math.floor(end.y);
+        start.x = Math.floor(start.x / coordPerPixel);
+        start.y = Math.floor(start.y / coordPerPixel);
+        end.x = Math.floor(end.x / coordPerPixel);
+        end.y = Math.floor(end.y / coordPerPixel);
 
         for (let x = start.x; x <= end.x; x++)
         {
             for (let y = start.y; y <= end.y; y++)
             {
-                if (Math.abs(x - this.center.x) + Math.abs(y - this.center.y) <= this.radius)
+                let xLeg = Math.abs(center.x - x);
+                let yLeg= Math.abs(center.y - y);
+
+                let distance = Math.sqrt(xLeg * xLeg + yLeg * yLeg);
+                if (distance <= this.radius / coordPerPixel)
                 {
-                    pixels[getPixelIndex(x, y)] = true;
+                    pixels[getPixelIndex(x, y)] = true; 
                 }
             }
         }
