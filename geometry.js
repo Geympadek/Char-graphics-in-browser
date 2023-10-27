@@ -177,11 +177,13 @@ class Circle
         {
             for (let y = start.y; y <= end.y; y++)
             {
-                let xLeg = Math.abs(center.x - x);
-                let yLeg= Math.abs(center.y - y);
+                let pixelRadius = 0.5;
+
+                let xLeg = Math.abs(center.x - (x + pixelRadius));
+                let yLeg= Math.abs(center.y - (y + pixelRadius));
 
                 let distance = Math.sqrt(xLeg * xLeg + yLeg * yLeg);
-                if (distance <= radius)
+                if (distance <= (radius + pixelRadius))
                 {
                     pixels[getPixelIndex(x, y)] = true; 
                 }

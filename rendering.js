@@ -1,8 +1,8 @@
 var screenOutput = "W";//Basically text that is shown in the paragraph
 var pixels;//Hidden array of boolean values. Important for rasterization.
-
-const symbolWidth = 2; //Width of one character in pixels
-const symbolHeight = 4; //Height of one character in pixels
+//2/4 5/12
+const symbolWidth = 11; //Width of one character in pixels
+const symbolHeight = 24; //Height of one character in pixels
 
 const pixelsPerSymbol = symbolHeight * symbolWidth;
 
@@ -62,15 +62,10 @@ function fillWith(filler)
 function symbolFromBrightness(brightness)
 {
     //const brightnessSymbols = " .:-=+*#@";
-    const brightnessSymbols = [" ", ".", ":", "-", "=", "+", "*", "#", "@"];
+    const brightnessSymbols = " .:-=+*#%@";
 
-    if (brightness == 0)
-    {
-        return brightnessSymbols[0];
-    }
-    brightness *= (brightnessSymbols.length - 2);
-    brightness++;
-    brightness = Math.floor(brightness);
+    brightness *= (brightnessSymbols.length - 1);
+    brightness = Math.round(brightness);
 
     return brightnessSymbols[brightness];
 }
