@@ -1,3 +1,61 @@
+class Collider
+{
+    vertices = [];
+    position;
+    scale;
+
+    onCollision;
+
+    constructor(vertices, position, scale, onCollision)
+    {
+        this.vertices = vertices;
+        this.position = position;
+        this.scale = scale;
+        this.onCollision = onCollision;
+    }
+
+    getGlobalPosition()
+    {
+        return {
+            start: {x: this.vertices[0] * this.scale + this.position.x,
+                    y: this.vertices[1] * this.scale + this.position.y},
+            end:   {x: this.vertices[2] * this.scale + this.position.x,
+                    y: this.vertices[3] * this.scale + this.position.y}
+        };
+    }
+
+    visualize()
+    {
+        let globalPos = this.getGlobalPosition();
+
+        let up = new Line({x: globalPos.start.x, y: globalPos.start.y}, {x: globalPos.end.x, y: globalPos.start.y});
+        up.draw();
+
+        let down = new Line({x: globalPos.start.x, y: globalPos.end.y}, {x: globalPos.end.x, y: globalPos.end.y});
+        down.draw();
+        
+        let left = new Line({x: globalPos.start.x, y: globalPos.start.y}, {x: globalPos.start.x, y: globalPos.end.y});
+        left.draw();
+
+        let right = new Line({x: globalPos.end.x, y: globalPos.start.y}, {x: globalPos.end.x, y: globalPos.end.y});
+        right.draw();
+    }
+
+    static getCollision(a, b)
+    {
+        let aPos = a.getGlobalPosition();
+        let bPos = b.getGlobalPosition();
+
+        if (aPos.end.x < bPos.start.x ||
+            aPos.start.x > bPos.end.x ||
+            aPos.end.y < bPos.start.y ||
+            aPos.start.y > bPos.end.y){
+            return null;
+        }
+        return "yes";
+    }
+}
+
 class Sprite
 {
     vertices = [];
@@ -127,5 +185,19 @@ function onkeyup(event)
         case KEY.F:
             player.input.fire = false;
             break;
+    }
+}
+
+function checkCollision(objects)
+{
+    for (let i = 0; i < objects.length; i++)
+    {
+        for (let j = 0; j < objects.length; j++)
+        {
+            if (Collider.checkCollision(objects[i], objects[j]) !== null)
+            {
+                console.log("Intersecection");
+            }
+        }
     }
 }
