@@ -1,8 +1,8 @@
 var screenOutput = "W";//Basically text that is shown in the paragraph
 var pixels;//Hidden array of boolean values. Important for rasterization.
 //2/4 5/12
-const symbolWidth = 11; //Width of one character in pixels
-const symbolHeight = 24; //Height of one character in pixels
+const symbolWidth = 6; //Width of one character in pixels
+const symbolHeight = 13; //Height of one character in pixels
 
 const pixelsPerSymbol = symbolHeight * symbolWidth;
 
