@@ -43,8 +43,8 @@ class Collider
 
     static getCollision(a, b)
     {
-        let aPos = a.getGlobalPosition();
-        let bPos = b.getGlobalPosition();
+        const aPos = a.getGlobalPosition();
+        const bPos = b.getGlobalPosition();
 
         if (aPos.end.x < bPos.start.x ||
             aPos.start.x > bPos.end.x ||
@@ -52,7 +52,26 @@ class Collider
             aPos.start.y > bPos.end.y){
             return null;
         }
-        return "yes";
+
+        const overlapX = Math.min(aPos.end.x, bPos.end.x) - Math.max(aPos.start.x, bPos.start.x);
+        const overlapY = Math.min(aPos.end.y, bPos.end.y) - Math.max(aPos.start.y, bPos.start.y);
+
+        if (overlapX > overlapY)
+        {
+            if (aPos.start.y > bPos.start.y)
+            {
+                return "bottom";
+            }
+            return "top";
+        }
+        else
+        {
+            if (aPos.start.x < bPos.start.x)
+            {
+                return "left";
+            }
+            return "right";
+        }
     }
 }
 

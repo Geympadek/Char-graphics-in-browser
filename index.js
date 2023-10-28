@@ -36,19 +36,39 @@ function loop()
         sprite.rotation += rotationSpeed;
     }
 
-    let circle = new Circle(center, 15);
-    circle.draw();
+    //let circle = new Circle(center, 15);
+    //circle.draw();
 
     let rocketCenter = sprite.findCenter();
-    let rocketCollider = new Collider([-1, -1, 1, 1], rocketCenter, 10, null);
-    rocketCollider.visualize();
+    let rocketCollider = new Collider([-1, -1, 1, 1], rocketCenter, 5.5, null);
+    //rocketCollider.visualize();
 
     let someCollider = new Collider([0, 0, 1, 1], center, 10, null);
     someCollider.visualize();
 
-    if (Collider.getCollision(rocketCollider, someCollider) == "yes")
+    const collision = Collider.getCollision(rocketCollider, someCollider);
+    if (collision != null)
     {
-        console.log("Intersection");
+        console.log("Intersection at the", collision);
+
+        const rocketPosition = rocketCollider.getGlobalPosition();
+        const collPosition = someCollider.getGlobalPosition();
+
+        switch(collision)
+        {
+            case "top":
+                sprite.position.y -= rocketPosition.end.y - collPosition.start.y;
+                break;
+            case "bottom":
+                sprite.position.y += collPosition.end.y - rocketPosition.start.y;
+                break;
+            case "left":
+                sprite.position.x -= rocketPosition.end.x - collPosition.start.x;
+                break;
+            case "right":
+                sprite.position.x += collPosition.end.x - rocketPosition.start.x;
+                break;
+        }
     }
 
     //rendering and rasterization
