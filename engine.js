@@ -4,14 +4,11 @@ class Collider
     position;
     scale;
 
-    onCollision;
-
-    constructor(vertices, position, scale, onCollision)
+    constructor(vertices, position, scale)
     {
         this.vertices = vertices;
-        this.position = position;
+        this.position = Object.create(position);
         this.scale = scale;
-        this.onCollision = onCollision;
     }
 
     getGlobalPosition()
@@ -60,17 +57,17 @@ class Collider
         {
             if (aPos.start.y > bPos.start.y)
             {
-                return "bottom";
+                return "top";
             }
-            return "top";
+            return "bottom";
         }
         else
         {
             if (aPos.start.x < bPos.start.x)
             {
-                return "left";
+                return "right";
             }
-            return "right";
+            return "left";
         }
     }
 }
@@ -85,7 +82,7 @@ class Sprite
     constructor(vertices, position, scale, rotation)
     {
         this.vertices = vertices;
-        this.position = position;
+        this.position = Object.create(position);
         this.scale = scale;
         this.rotation = rotation;
     }
@@ -143,6 +140,51 @@ class Sprite
         }
 
         return {x: (minx + maxx) / 2 * this.scale + this.position.x, y: (miny + maxy) / 2 * this.scale + this.position.y};
+    }
+}
+
+class GameObject
+{
+    position;
+    scale;
+    rotation;
+
+    collider;
+    sprite;
+
+    onCollision;
+
+    constructor(collider, sprite, onCollision)
+    {
+        this.collider = collider;
+        this.sprite = sprite;
+
+        this.position = {x: 0, y:0};
+        this.scale = 1;
+        this.rotation = 0;
+
+        this.onCollision = onCollision;
+    }
+    getRealSprite()
+    {
+        return new Sprite(
+            this.sprite.vertices, 
+            {x: this.sprite.position.x + this.position.x, y: this.sprite.position.y + this.position.y}, 
+            this.sprite.scale * this.scale, 
+            this.sprite.rotation + this.rotation
+        );
+    }
+    getRealCollider()
+    {
+        return new Collider(
+            this.collider.vertices,
+            {x: this.collider.position.x + this.position.x, y: this.collider.position.y + this.position.y},
+            this.collider.scale * this.scale
+        );
+    }
+    draw()
+    {
+        this.getRealSprite().draw();
     }
 }
 
@@ -209,14 +251,41 @@ function onkeyup(event)
 
 function checkCollision(objects)
 {
-    for (let i = 0; i < objects.length; i++)
+    for (let keyI in objects)
     {
-        for (let j = 0; j < objects.length; j++)
+        for (let keyJ in objects)
         {
-            if (Collider.checkCollision(objects[i], objects[j]) !== null)
+            if (objects[keyI] === objects[keyJ])
             {
-                console.log("Intersecection");
+                continue;
+            }
+
+            let c = Collider.getCollision(objects[keyI].getRealCollider(), objects[keyJ].getRealCollider());
+            if (c == null)
+            {
+                continue;
+            }
+
+            let e = {
+                collision: c,
+                gameObject: objects[keyJ]
+            };
+
+            if (objects[keyI].onCollision !== null)
+            {
+                objects[keyI].onCollision(e);
             }
         }
+    }
+}
+function drawObjects(objects)
+{
+    for (let key in objects)
+    {
+        if (objects[key].sprite == null || objects[key].sprite == undefined)
+        {
+            continue;
+        }
+        objects[key].draw();
     }
 }
