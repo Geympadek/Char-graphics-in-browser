@@ -52,7 +52,6 @@ class Line
         }
         pixels[getPixelIndex(x, y)] = true;
     }
-
     rotateAround(center, angle)
     {
         return new Line(rotatePointAround(this.a, center, angle), rotatePointAround(this.b, center, angle));
@@ -145,7 +144,8 @@ class Triangle
     {
         return {
             x: (this.a.x + this.b.x + this.c.x) / 3,
-            y: (this.a.y + this.b.y + this.c.y) / 3 };
+            y: (this.a.y + this.b.y + this.c.y) / 3 
+        };
     }
 }
 
@@ -153,7 +153,6 @@ class Circle
 {
     center;
     radius;
-
     constructor(center, radius)
     {
         this.center = center;

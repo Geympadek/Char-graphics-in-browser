@@ -57,17 +57,17 @@ class Collider
         {
             if (aPos.start.y > bPos.start.y)
             {
-                return "top";
+                return "bottom";
             }
-            return "bottom";
+            return "top";
         }
         else
         {
             if (aPos.start.x < bPos.start.x)
             {
-                return "right";
+                return "left";
             }
-            return "left";
+            return "right";
         }
     }
 }
@@ -138,7 +138,6 @@ class Sprite
         {
             maxy = Math.max(maxy, this.vertices[i]);
         }
-
         return {x: (minx + maxx) / 2 * this.scale + this.position.x, y: (miny + maxy) / 2 * this.scale + this.position.y};
     }
 }
@@ -176,6 +175,14 @@ class GameObject
     }
     getRealCollider()
     {
+        if (this.sprite == null)
+        {
+            return new Collider(
+                this.collider.vertices,
+                {x: this.collider.position.x + this.position.x, y: this.collider.position.y + this.position.y},
+                this.collider.scale * this.scale
+            );
+        }
         let spriteCenter = this.getRealSprite().findCenter();
         return new Collider(
             this.collider.vertices,
@@ -186,6 +193,20 @@ class GameObject
     draw()
     {
         this.getRealSprite().draw();
+    }
+
+    static instanciate(original)
+    {
+        let instance = new GameObject(
+            new Collider(original.collider.vertices, original.collider.position, original.collider.scale),
+            new Sprite(original.sprite.vertices, original.sprite.position, original.sprite.scale, original.sprite.rotation),
+            original.onCollision
+        );
+        instance.position = original.position;
+        instance.scale = original.scale;
+        instance.rotation = original.rotation;
+
+        return instance;
     }
 }
 
@@ -256,20 +277,21 @@ function checkCollision(objects)
     {
         for (let keyJ in objects)
         {
-            if (objects[keyI] === objects[keyJ])
+            if (objects[keyI] == objects[keyJ])
             {
                 continue;
             }
 
             let c = Collider.getCollision(objects[keyI].getRealCollider(), objects[keyJ].getRealCollider());
-            if (c == null)
+            if (c == null || c == undefined)
             {
                 continue;
             }
 
             let e = {
                 collision: c,
-                gameObject: objects[keyJ]
+                gameObject: objects[keyJ],
+                source: objects[keyI],
             };
 
             if (objects[keyI].onCollision !== null)

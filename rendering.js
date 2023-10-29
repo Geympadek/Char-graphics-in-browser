@@ -13,7 +13,7 @@ const numOfSymbols = numOfColumns * numOfRows;
 const numOfPixels = numOfSymbols * pixelsPerSymbol;
 
 pixels = new Array(numOfPixels);
-pixels.fill(false);
+clearScreen();
 
 const pixelWidth = numOfColumns * symbolWidth;//number of pixels from left to right
 const pixelHeight = numOfRows * symbolHeight;//number of pixels from top to bottom
@@ -31,11 +31,11 @@ const DEG_TO_RADIANS = 0.017453292;
 
 function getPixelIndex(x, y)
 {
-    if (x < 0 || x > pixelWidth)
+    if (x < 0 || x >= pixelWidth)
     {
         return numOfPixels;
     }
-    if (y < 0 || y > pixelHeight)
+    if (y < 0 || y >= pixelHeight)
     {
         return numOfPixels;
     }
@@ -61,7 +61,6 @@ function fillWith(filler)
 
 function symbolFromBrightness(brightness)
 {
-    //const brightnessSymbols = " .:-=+*#@";
     const brightnessSymbols = " .:-=+*#%@";
 
     brightness *= (brightnessSymbols.length - 1);
