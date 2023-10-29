@@ -176,9 +176,10 @@ class GameObject
     }
     getRealCollider()
     {
+        let spriteCenter = this.getRealSprite().findCenter();
         return new Collider(
             this.collider.vertices,
-            {x: this.collider.position.x + this.position.x, y: this.collider.position.y + this.position.y},
+            {x: this.collider.position.x + spriteCenter.x, y: this.collider.position.y + spriteCenter.y},
             this.collider.scale * this.scale
         );
     }

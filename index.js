@@ -1,6 +1,6 @@
 var gameObjects = {};
 gameObjects["rocket"] = new GameObject(
-    new Collider([-1, -1, 1, 1], {x: 5, y:2.75}, 7),
+    new Collider([-1, -1, 1, 1], {x: 0, y:0}, 6),
     new Sprite([0,2, 0.5,1, 0.5,2,     0,0, 0.5,0, 0.5,1,      0.5,0, 3,0, 0.5,2,      3,0, 3,2, 0.5,2,  3,0, 4,1, 3,2], {x:0, y:0}, 2.9, 0),
     function(e)
     {
@@ -9,19 +9,14 @@ gameObjects["rocket"] = new GameObject(
 );
 gameObjects["rocket"].position = Object.create(center);
 gameObjects["rocket"].position.y += 10;
-gameObjects["rocket"].scale = 4;
+gameObjects["rocket"].scale = 1;
 
 gameObjects["something else"] = new GameObject(gameObjects["rocket"].collider, gameObjects["rocket"].sprite, null);
 gameObjects["something else"].position = {x: center.x - 20, y: center.y - 10};
 
-let timer = 0;
-function loop()
+var deltaTime = 0;
+function handleInput()
 {
-    var deltaTime = Date.now() - timer;
-    timer = Date.now();
-
-    clearScreen();
-
     let rocketSpeed = 3.5 * deltaTime / 100;
     let rotationSpeed = 6 * deltaTime / 100;
 
@@ -44,6 +39,17 @@ function loop()
     {
         gameObjects["rocket"].rotation += rotationSpeed;
     }
+}
+
+let timer = 0;
+function loop()
+{
+    deltaTime = Date.now() - timer;
+    timer = Date.now();
+
+    clearScreen();
+
+    handleInput();
     
     checkCollision(gameObjects);
     drawObjects(gameObjects);
