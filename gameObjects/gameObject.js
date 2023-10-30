@@ -51,15 +51,18 @@ class GameObject
     {
         this.getRealSprite().draw();
     }
+    update()
+    {
+        
+    }
 
     static instanciate(original)
     {
         let instance = new GameObject(
             new Collider(original.collider.vertices, original.collider.position, original.collider.scale),
-            new Sprite(original.sprite.vertices, original.sprite.position, original.sprite.scale, original.sprite.rotation),
-            original.onCollision
+            new Sprite(original.sprite.vertices, original.sprite.position, original.sprite.scale, original.sprite.rotation)
         );
-        instance.position = original.position;
+        instance.position = Object.create(original.position);
         instance.scale = original.scale;
         instance.rotation = original.rotation;
 

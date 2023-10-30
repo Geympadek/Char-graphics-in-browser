@@ -8,7 +8,7 @@ class Projectile extends GameObject
         super(collider, sprite);
     }
 
-    move()
+    update()
     {
         this.position.x += this.xSpeed;
         this.position.y += this.ySpeed;
@@ -60,5 +60,20 @@ class Projectile extends GameObject
                 this.position.y += collidedPosition.end.y - sourcePosition.start.y;
                 break;
         }
+    }
+    static instanciate(original)
+    {
+        let instance = new Projectile(
+            new Collider(original.collider.vertices, original.collider.position, original.collider.scale),
+            new Sprite(original.sprite.vertices, original.sprite.position, original.sprite.scale, original.sprite.rotation)
+        );
+        instance.position = Object.create(original.position);
+        instance.scale = original.scale;
+        instance.rotation = original.rotation;
+
+        instance.xSpeed = original.xSpeed;
+        instance.ySpeed = original.ySpeed;
+
+        return instance;
     }
 }
