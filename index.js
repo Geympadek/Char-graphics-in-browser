@@ -1,66 +1,35 @@
 var gameObjects = {};
 
-function onCollisionBorder(e)
-{
-    let sourcePosition =  e.source.getRealCollider().getGlobalPosition();
-    let collidedPosition = e.gameObject.getRealCollider().getGlobalPosition();
-    switch(e.collision)
-    {
-        case "right":
-            console.log("border-right");
-            e.gameObject.position.x -= collidedPosition.end.x - sourcePosition.start.x;
-            break;
-        case "left":
-            console.log("border-left");
-            e.gameObject.position.x += sourcePosition.end.x - collidedPosition.start.x;
-            break;
-        case "top":
-            console.log("border-top");
-            e.gameObject.position.y += sourcePosition.end.y - collidedPosition.start.y;
-            break;
-        case "bottom":
-            e.gameObject.position.y -= collidedPosition.end.y - sourcePosition.start.y;
-            console.log("border-bottom");
-            break;
-    }
-}
+gameObjects["border-up"] = new Border(new Collider([0, -10, pixelWidth * coordPerPixel, 0], {x:0, y:0}, 1), null);
+gameObjects["border-down"] = new Border(new Collider([0, pixelHeight * coordPerPixel,   pixelWidth * coordPerPixel, pixelHeight * coordPerPixel + 10], {x:0, y:0}, 1), null);
+gameObjects["border-left"] = new Border(new Collider([-10, 0,    0, pixelHeight * coordPerPixel], {x:0, y:0}, 1), null);
+gameObjects["border-right"] = new Border(new Collider([pixelWidth * coordPerPixel, 0,    pixelWidth * coordPerPixel, pixelHeight * coordPerPixel + 10], {x:0, y:0}, 1), null);
 
-gameObjects["border-up"] = new GameObject(
-    new Collider([0, -10,    pixelWidth * coordPerPixel, 0], {x:0, y:0}, 1),
-    null,
-    onCollisionBorder
-);
-gameObjects["border-down"] = new GameObject(
-    new Collider([0, pixelHeight * coordPerPixel,    pixelWidth * coordPerPixel, pixelHeight * coordPerPixel + 10], {x:0, y:0}, 1),
-    null,
-    onCollisionBorder
-);
-gameObjects["border-left"] = new GameObject(
-    new Collider([-10, 0,    0, pixelHeight * coordPerPixel], {x:0, y:0}, 1),
-    null,
-    onCollisionBorder
-);
-gameObjects["border-right"] = new GameObject(
-    new Collider([pixelWidth * coordPerPixel, 0,    pixelWidth * coordPerPixel, pixelHeight * coordPerPixel + 10], {x:0, y:0}, 1),
-    null,
-    onCollisionBorder
-);
-
-
-gameObjects["border-up"].position = {x: 0, y: 0};
-gameObjects["border-up"].scale = 1;
-
-gameObjects["rocket"] = new GameObject(
+gameObjects["rocket"] = new Rocket(
     new Collider([-1, -1, 1, 1], {x: 0, y:0}, 6),
-    new Sprite([0,2, 0.5,1, 0.5,2,     0,0, 0.5,0, 0.5,1,      0.5,0, 3,0, 0.5,2,      3,0, 3,2, 0.5,2,  3,0, 4,1, 3,2], {x:0, y:0}, 2.9, 0),
-    function(e)
-    {
-        //console.log("intersection at the", e.collision);
-    }
+    new Sprite([0,2, 0.5,1, 0.5,2,     0,0, 0.5,0, 0.5,1,      0.5,0, 3,0, 0.5,2,      3,0, 3,2, 0.5,2,  3,0, 4,1, 3,2], {x:0, y:0}, 2.9, 0)
 );
 gameObjects["rocket"].position = Object.create(center);
 gameObjects["rocket"].position.y += 10;
 gameObjects["rocket"].scale = 1;
+
+gameObjects["projectile"] = new Projectile(
+    new Collider([-1, -1, 1, 1], {x:0, y:0}, 2.5),
+    new Sprite([0.5,0, 0,0.87, 1,0.87], {x:0, y:0}, 5, 0)
+)
+gameObjects["projectile"].position = {x: center.x, y: center.y};
+gameObjects["projectile"].scale = 1;
+gameObjects["projectile"].xSpeed = 0.75;
+gameObjects["projectile"].ySpeed = 0.56;
+
+gameObjects["projectile2"] = new Projectile(
+    new Collider([-1, -1, 1, 1], {x:0, y:0}, 2.5),
+    new Sprite([0.5,0, 0,0.87, 1,0.87], {x:0, y:0}, 5, 0)
+);
+gameObjects["projectile2"].position = {x: 10, y: 10};
+gameObjects["projectile2"].xSpeed = 0.93;
+gameObjects["projectile2"].ySpeed = 0.69;
+
 
 var deltaTime = 0;
 function handleInput()
@@ -94,7 +63,7 @@ function handleInput()
     }
 }
 
-let timer = 0;
+let timer = Date.now();
 function loop()
 {
     deltaTime = Date.now() - timer;
@@ -103,10 +72,9 @@ function loop()
     clearScreen();
 
     handleInput();
-    gameObjects["border-up"].getRealCollider().visualize();
-    gameObjects["border-down"].getRealCollider().visualize();
-    gameObjects["border-left"].getRealCollider().visualize();
-    gameObjects["border-right"].getRealCollider().visualize();
+
+    gameObjects["projectile"].move();
+    gameObjects["projectile2"].move();
     
     checkCollision(gameObjects);
     drawObjects(gameObjects);

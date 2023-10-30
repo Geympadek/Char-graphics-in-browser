@@ -90,12 +90,12 @@ class Triangle
     {
         let points = sortVertices(this.a, this.b, this.c);
 
-        points[0].x = Math.floor(points[0].x / coordPerPixel);
-        points[0].y = Math.floor(points[0].y / coordPerPixel);
-        points[1].x = Math.floor(points[1].x / coordPerPixel);
-        points[1].y = Math.floor(points[1].y / coordPerPixel);
-        points[2].x = Math.floor(points[2].x / coordPerPixel);
-        points[2].y = Math.floor(points[2].y / coordPerPixel);
+        points[0].x = Math.round(points[0].x / coordPerPixel);
+        points[0].y = Math.round(points[0].y / coordPerPixel);
+        points[1].x = Math.round(points[1].x / coordPerPixel);
+        points[1].y = Math.round(points[1].y / coordPerPixel);
+        points[2].x = Math.round(points[2].x / coordPerPixel);
+        points[2].y = Math.round(points[2].y / coordPerPixel);
 
         //define bounding box
         let start = {x: Math.round(Math.min(points[0].x, points[1].x, points[2].x)), y: Math.round(Math.min(points[0].y, points[1].y, points[2].y))};
@@ -105,24 +105,24 @@ class Triangle
         {
             for (let j = start.y; j <= end.y; j++)
             {
-                if (this.checkIfInside({x: i, y: j}))
+                if (Triangle.checkIfInside({x: i, y: j}, points))
                 {
                     pixels[getPixelIndex(i, j)] = true;
                 }
             }
         }
     }
-    checkIfInside(point)
+    static checkIfInside(point, trianglePoints)
     {
-        if (edgeFunction(this.a, this.b, point) < 0)
+        if (edgeFunction(trianglePoints[0], trianglePoints[1], point) < 0)
         {
             return false;
         }
-        if (edgeFunction(this.b, this.c, point) < 0)
+        if (edgeFunction(trianglePoints[1], trianglePoints[2], point) < 0)
         {
             return false;
         }
-        if (edgeFunction(this.c, this.a, point) < 0)
+        if (edgeFunction(trianglePoints[2], trianglePoints[0], point) < 0)
         {
             return false;
         }

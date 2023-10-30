@@ -49,7 +49,6 @@ class Collider
             aPos.start.y > bPos.end.y){
             return null;
         }
-
         const overlapX = Math.min(aPos.end.x, bPos.end.x) - Math.max(aPos.start.x, bPos.start.x);
         const overlapY = Math.min(aPos.end.y, bPos.end.y) - Math.max(aPos.start.y, bPos.start.y);
 
@@ -86,7 +85,6 @@ class Sprite
         this.scale = scale;
         this.rotation = rotation;
     }
-
     draw()
     {
         let primitives = [];
@@ -139,74 +137,6 @@ class Sprite
             maxy = Math.max(maxy, this.vertices[i]);
         }
         return {x: (minx + maxx) / 2 * this.scale + this.position.x, y: (miny + maxy) / 2 * this.scale + this.position.y};
-    }
-}
-
-class GameObject
-{
-    position;
-    scale;
-    rotation;
-
-    collider;
-    sprite;
-
-    onCollision;
-
-    constructor(collider, sprite, onCollision)
-    {
-        this.collider = collider;
-        this.sprite = sprite;
-
-        this.position = {x: 0, y:0};
-        this.scale = 1;
-        this.rotation = 0;
-
-        this.onCollision = onCollision;
-    }
-    getRealSprite()
-    {
-        return new Sprite(
-            this.sprite.vertices, 
-            {x: this.sprite.position.x + this.position.x, y: this.sprite.position.y + this.position.y}, 
-            this.sprite.scale * this.scale, 
-            this.sprite.rotation + this.rotation
-        );
-    }
-    getRealCollider()
-    {
-        if (this.sprite == null)
-        {
-            return new Collider(
-                this.collider.vertices,
-                {x: this.collider.position.x + this.position.x, y: this.collider.position.y + this.position.y},
-                this.collider.scale * this.scale
-            );
-        }
-        let spriteCenter = this.getRealSprite().findCenter();
-        return new Collider(
-            this.collider.vertices,
-            {x: this.collider.position.x + spriteCenter.x, y: this.collider.position.y + spriteCenter.y},
-            this.collider.scale * this.scale
-        );
-    }
-    draw()
-    {
-        this.getRealSprite().draw();
-    }
-
-    static instanciate(original)
-    {
-        let instance = new GameObject(
-            new Collider(original.collider.vertices, original.collider.position, original.collider.scale),
-            new Sprite(original.sprite.vertices, original.sprite.position, original.sprite.scale, original.sprite.rotation),
-            original.onCollision
-        );
-        instance.position = original.position;
-        instance.scale = original.scale;
-        instance.rotation = original.rotation;
-
-        return instance;
     }
 }
 
@@ -290,8 +220,7 @@ function checkCollision(objects)
 
             let e = {
                 collision: c,
-                gameObject: objects[keyJ],
-                source: objects[keyI],
+                gameObject: objects[keyJ]
             };
 
             if (objects[keyI].onCollision !== null)
