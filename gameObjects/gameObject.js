@@ -7,6 +7,8 @@ class GameObject
     collider;
     sprite;
 
+    isActive;//if false, gameObject will be deleted.
+
     onCollision(e)
     {
 
@@ -20,6 +22,8 @@ class GameObject
         this.position = {x: 0, y:0};
         this.scale = 1;
         this.rotation = 0;
+
+        this.isActive = true;
     }
     getRealSprite()
     {

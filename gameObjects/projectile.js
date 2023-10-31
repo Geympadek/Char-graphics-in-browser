@@ -12,10 +12,12 @@ class Projectile extends GameObject
     {
         this.position.x += this.xSpeed;
         this.position.y += this.ySpeed;
+
+        this.rotation += 3;
     }
     onCollision(e)
     {
-        console.log("jump!");
+        /*console.log("jump!");
         if (e.collision == "top" || e.collision == "bottom")
         {
             this.ySpeed *= -1;
@@ -59,7 +61,8 @@ class Projectile extends GameObject
             case "bottom":
                 this.position.y += collidedPosition.end.y - sourcePosition.start.y;
                 break;
-        }
+        }*/
+        this.isActive = false;
     }
     static instanciate(original)
     {

@@ -11,33 +11,25 @@ gameObjects["rocket"] = new Rocket(
 );
 gameObjects["rocket"].position = Object.create(center);
 gameObjects["rocket"].position.y += 10;
-gameObjects["rocket"].scale = 1;
+gameObjects["rocket"].scale = 0.7;
+gameObjects["rocket"].forwardMovement = new SmoothMovement(50, 750, 1500);
 
-gameObjects["projectile"] = new Projectile(
+let projectile = new Projectile(
     new Collider([-1, -1, 1, 1], {x:0, y:0}, 2.5),
     new Sprite([0.5,0, 0,0.87, 1,0.87], {x:0, y:0}, 5, 0)
 )
-gameObjects["projectile"].position = {x: center.x, y: center.y};
-gameObjects["projectile"].scale = 1;
-gameObjects["projectile"].xSpeed = 0.3;
-gameObjects["projectile"].ySpeed = 0.2;
-
-gameObjects["projectile2"] = new Projectile(
-    new Collider([-1, -1, 1, 1], {x:0, y:0}, 2.5),
-    new Sprite([0.5,0, 0,0.87, 1,0.87], {x:0, y:0}, 5, 0)
-);
-gameObjects["projectile2"].position = {x: 10, y: 10};
-gameObjects["projectile2"].xSpeed = 0.2;
-gameObjects["projectile2"].ySpeed = 0.4;
-
+projectile.position = {x: center.x, y: center.y};
+projectile.scale = 1;
+projectile.xSpeed = 0.3;
+projectile.ySpeed = 0.2;
 
 var deltaTime = 0;
 let isSingleClick = true;
 let projectileCount = 3;
 function handleInput()
 {
-    let rocketSpeed = 3.5 * deltaTime / 100;
-    let rotationSpeed = 6 * deltaTime / 100;
+    let rotationSpeed = 60 * deltaTime;
+    /*let rocketSpeed = 3.5 * deltaTime / 100;
 
     if (player.input.up)
     {
@@ -48,7 +40,7 @@ function handleInput()
     {
         gameObjects["rocket"].position.x -= Math.cos((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * rocketSpeed;
         gameObjects["rocket"].position.y -= Math.sin((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * rocketSpeed;
-    }
+    }*/
 
     if (player.input.left)
     {
@@ -61,20 +53,20 @@ function handleInput()
 
     if (player.input.fire)
     {
-        gameObjects["rocket"].getRealCollider().visualize();
         if (isSingleClick)
         {
             console.log("single click detected!");
             
-            let distance = 10;
+            let distance = 13;
             let name = "projectile" + String(projectileCount++);
-            gameObjects[name] = Projectile.instanciate(gameObjects["projectile"]);
+            gameObjects[name] = Projectile.instanciate(projectile);
             gameObjects[name].position = gameObjects["rocket"].getRealSprite().findCenter();
-            gameObjects[name].position.x += Math.cos((gameObjects["rocket"].rotation - distance) * DEG_TO_RADIANS) * distance;
-            gameObjects[name].position.y += Math.sin((gameObjects["rocket"].rotation - distance) * DEG_TO_RADIANS) * distance;
+            gameObjects[name].position.x += Math.cos((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * distance;
+            gameObjects[name].position.y += Math.sin((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * distance;
 
-            gameObjects[name].xSpeed = Math.cos((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * 2;
-            gameObjects[name].ySpeed = Math.sin((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * 2;
+            let projectileSpeed = 2 * Math.random();
+            gameObjects[name].xSpeed = Math.cos((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * projectileSpeed;
+            gameObjects[name].ySpeed = Math.sin((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * projectileSpeed;
 
             isSingleClick = false;
         }
@@ -88,7 +80,7 @@ function handleInput()
 let timer = Date.now();
 function loop()
 {
-    deltaTime = Date.now() - timer;
+    deltaTime = (Date.now() - timer) * 0.001;
     timer = Date.now();
 
     clearScreen();

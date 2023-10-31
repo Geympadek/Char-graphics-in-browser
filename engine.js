@@ -206,6 +206,11 @@ function updateObjects(objects)
     for (let key in objects)
     {
         objects[key].update();
+
+        if (objects[key].isActive == false)
+        {
+            delete objects[key];
+        }
     }
 }
 function checkCollision(objects)
@@ -241,11 +246,6 @@ function drawObjects(objects)
 {
     for (let key in objects)
     {
-        if (player.input.fire)
-        {
-            objects[key].getRealCollider().visualize();
-        }
-
         if (objects[key].sprite == null || objects[key].sprite == undefined)
         {
             continue;
