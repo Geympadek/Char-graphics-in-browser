@@ -13,7 +13,8 @@ gameObjects["rocket"].position = Object.create(center);
 gameObjects["rocket"].position.y += 10;
 gameObjects["rocket"].scale = 0.7;
 gameObjects["rocket"].forwardMovement = new SmoothMovement(50, 750, 1500);
-
+gameObjects["rocket"].backwardsMovement = new SmoothMovement(25, 750, 1800);
+gameObjects["rocket"].rotationSpeed = 90;
 let projectile = new Projectile(
     new Collider([-1, -1, 1, 1], {x:0, y:0}, 2.5),
     new Sprite([0.5,0, 0,0.87, 1,0.87], {x:0, y:0}, 5, 0)
@@ -28,29 +29,6 @@ let isSingleClick = true;
 let projectileCount = 3;
 function handleInput()
 {
-    let rotationSpeed = 60 * deltaTime;
-    /*let rocketSpeed = 3.5 * deltaTime / 100;
-
-    if (player.input.up)
-    {
-        gameObjects["rocket"].position.x += Math.cos((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * rocketSpeed;
-        gameObjects["rocket"].position.y += Math.sin((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * rocketSpeed;
-    }
-    if (player.input.down)
-    {
-        gameObjects["rocket"].position.x -= Math.cos((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * rocketSpeed;
-        gameObjects["rocket"].position.y -= Math.sin((gameObjects["rocket"].rotation) * DEG_TO_RADIANS) * rocketSpeed;
-    }*/
-
-    if (player.input.left)
-    {
-        gameObjects["rocket"].rotation -= rotationSpeed;
-    }
-    if (player.input.right)
-    {
-        gameObjects["rocket"].rotation += rotationSpeed;
-    }
-
     if (player.input.fire)
     {
         if (isSingleClick)

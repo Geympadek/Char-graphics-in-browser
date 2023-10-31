@@ -40,7 +40,7 @@ class Rocket extends GameObject
 {
     forwardMovement;
     backwardsMovement;
-    rotationMovement;
+    rotationSpeed;
 
     constructor(collider, sprite)
     {
@@ -54,6 +54,21 @@ class Rocket extends GameObject
 
         this.position.x += Math.cos((this.rotation) * DEG_TO_RADIANS) * forwardSpeed;
         this.position.y += Math.sin((this.rotation) * DEG_TO_RADIANS) * forwardSpeed;
+
+        player.input.down ? this.backwardsMovement.increase() : this.backwardsMovement.decrease();
+        let backwardsSpeed = this.backwardsMovement.getCurrentSpeed() * deltaTime;
+
+        this.position.x -= Math.cos((this.rotation) * DEG_TO_RADIANS) * backwardsSpeed;
+        this.position.y -= Math.sin((this.rotation) * DEG_TO_RADIANS) * backwardsSpeed;
+
+        if (player.input.right)
+        {
+            this.rotation += this.rotationSpeed * deltaTime;
+        }
+        if (player.input.left)
+        {
+            this.rotation -= this.rotationSpeed * deltaTime;
+        }
     }
     onCollision(e)
     {
