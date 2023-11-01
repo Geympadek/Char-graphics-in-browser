@@ -42,9 +42,12 @@ class Rocket extends GameObject
     backwardsMovement;
     rotationSpeed;
 
-    constructor(collider, sprite)
+    hp;
+
+    constructor(collider, sprite, hp)
     {
         super(collider, sprite);
+        this.hp = hp;
     }
     
     update()
@@ -68,6 +71,11 @@ class Rocket extends GameObject
         if (player.input.left)
         {
             this.rotation -= this.rotationSpeed * deltaTime;
+        }
+
+        if (this.hp <= 0)
+        {
+            this.isActive = false;
         }
     }
     onCollision(e)

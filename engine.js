@@ -6,7 +6,7 @@ class Collider
 
     constructor(vertices, position, scale)
     {
-        this.vertices = vertices;
+        this.vertices = [...vertices];
         this.position = Object.create(position);
         this.scale = scale;
     }
@@ -80,7 +80,7 @@ class Sprite
 
     constructor(vertices, position, scale, rotation)
     {
-        this.vertices = vertices;
+        this.vertices = [...vertices];
         this.position = Object.create(position);
         this.scale = scale;
         this.rotation = rotation;
