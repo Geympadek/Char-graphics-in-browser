@@ -1,11 +1,11 @@
 class SmoothMovement
 {
-    maxSpeed;
-    squaredSpeed = 0;
-    acceleration;
-    deceleration;
+    maxSpeed : number;
+    squaredSpeed : number = 0;
+    acceleration : number;
+    deceleration : number;
     
-    constructor(maxSpeed, acceleration, deceleration)
+    constructor(maxSpeed : number, acceleration : number, deceleration : number)
     {
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration;
@@ -38,13 +38,13 @@ class SmoothMovement
 
 class Rocket extends GameObject
 {
-    forwardMovement;
-    backwardsMovement;
-    rotationSpeed;
+    forwardMovement : SmoothMovement;
+    backwardsMovement : SmoothMovement;
+    rotationSpeed : number;
 
-    hp;
+    hp : number;
 
-    constructor(collider, sprite, hp)
+    constructor(collider : Collider, sprite : Sprite, hp : number)
     {
         super(collider, sprite);
         this.hp = hp;
@@ -78,7 +78,7 @@ class Rocket extends GameObject
             this.isActive = false;
         }
     }
-    onCollision(e)
+    onCollision<T extends GameObject>(e : {collision: string, gameObject: T})
     {
         console.log("collision detected with rocket");
     }
