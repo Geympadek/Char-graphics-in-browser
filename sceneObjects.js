@@ -33,8 +33,9 @@ let enemy = new Enemy(
     new Sprite([0,4, 1,3.5, 1,1,    1,3.5, 1,1, 2,1,    1,1, 2,0, 4,0,    1,1, 4,0, 5,1,    4,1, 5,1, 6,4,   4,1, 6,4, 5,3.5,   2,1, 2.5,2, 4,1,    2.5,2, 4,1, 3.5,2,  2.5,2, 3.5,2, 3,2.25], {x:0, y:0}, 1, 90),
     5
 );
+enemy.position = Object.create(center);
+enemy.scale = 3;
+enemy.rotationSpeed = 50;
+enemy.forwardMovement = new SmoothMovement(30, 750, 1300);
+
 gameObjects["enemy0"] = Enemy.instanciate(enemy);
-gameObjects["enemy0"].position = Object.create(center);
-gameObjects["enemy0"].scale = 3;
-gameObjects["enemy0"].rotationSpeed = 50;
-gameObjects["enemy0"].forwardMovement = new SmoothMovement(30, 750, 1300);

@@ -4,6 +4,7 @@ class Enemy extends GameObject
     rotationSpeed;
 
     hp;
+    damage;
     
     constructor(collider, sprite, hp)
     {
@@ -76,6 +77,11 @@ class Enemy extends GameObject
         instance.position = original.position;
         instance.scale = original.scale;
         instance.rotation = original.rotation;
+
+        instance.forwardMovement = new SmoothMovement(original.forwardMovement.maxSpeed, original.forwardMovement.acceleration, original.forwardMovement.deceleration);
+        instance.rotationSpeed = original.rotationSpeed;
+
+        instance.damage = original.damage;
         return instance;
     }
 }
