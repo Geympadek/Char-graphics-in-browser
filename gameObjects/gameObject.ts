@@ -1,5 +1,8 @@
 class GameObject
 {
+    layer : string;
+    tag : string;
+
     position : {x: number, y: number};
     scale : number;
     rotation : number;
@@ -24,6 +27,9 @@ class GameObject
         this.rotation = 0;
 
         this.isActive = true;
+
+        this.layer = "default";
+        this.tag = "none";
     }
     getRealSprite() : Sprite
     {
@@ -71,5 +77,16 @@ class GameObject
         instance.rotation = original.rotation;
 
         return instance;
+    }
+    static getObjectByTag(tag : string)
+    {
+        for (let key in gameObjects)
+        {
+            if (gameObjects[key].tag == tag)
+            {
+                return gameObjects[key];
+            }
+        }
+        return null;
     }
 }

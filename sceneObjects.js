@@ -11,6 +11,7 @@ gameObjects["rocket"] = new Rocket(
     new Sprite([0,2, 0.5,1, 0.5,2,     0,0, 0.5,0, 0.5,1,      0.5,0, 3,0, 0.5,2,      3,0, 3,2, 0.5,2,  3,0, 4,1, 3,2], {x:0, y:0}, 2.9, 0),
     10
 );
+gameObjects["rocket"].tag = "player";
 gameObjects["rocket"].position = Object.create(center);
 gameObjects["rocket"].position.y += 10;
 gameObjects["rocket"].scale = 1;
@@ -37,5 +38,3 @@ enemy.position = Object.create(center);
 enemy.scale = 3;
 enemy.rotationSpeed = 50;
 enemy.forwardMovement = new SmoothMovement(30, 750, 1300);
-
-gameObjects["enemy0"] = Enemy.instanciate(enemy);

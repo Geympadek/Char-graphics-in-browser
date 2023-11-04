@@ -141,7 +141,7 @@ class Sprite
 
 var player =
 {
-    input: {left: false, up: false, right: false, down: false, fire: false}
+    input: {left: false, up: false, right: false, down: false, fire: false, spawn: false}
 }
 
 document.addEventListener("keydown", onKeyDown, false);
@@ -153,7 +153,8 @@ const KEY =
     A: 65,
     S: 83,
     D: 68,
-    F: 70
+    F: 70,
+    SPACE: 32,
 }
 
 function onKeyDown(event)
@@ -174,6 +175,9 @@ function onKeyDown(event)
             break;
         case KEY.F:
             player.input.fire = true;
+            break;
+        case KEY.SPACE:
+            player.input.spawn = true;
             break;
     }
 }
@@ -196,6 +200,9 @@ function onKeyUp(event)
             break;
         case KEY.F:
             player.input.fire = false;
+            break;
+        case KEY.SPACE:
+            player.input.spawn = false;
             break;
     }
 }

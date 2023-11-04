@@ -12,6 +12,32 @@ class Enemy extends GameObject
 
         this.hp = hp;
     }
+    
+    onCollision(e: {collision: string, gameObject: GameObject})
+    {
+        if (e.gameObject.tag == "player")
+        {
+            e.gameObject.hp -= deltaTime;
+            return;
+        }
+        let sourcePosition = this.getRealCollider().getGlobalPosition();
+        let collidedPosition = e.gameObject.getRealCollider().getGlobalPosition();
+        switch(e.collision)
+        {
+            case "right":
+                e.gameObject.position.x -= collidedPosition.end.x - sourcePosition.start.x;
+                break;
+            case "left":
+                e.gameObject.position.x += sourcePosition.end.x - collidedPosition.start.x;
+                break;
+            case "top":
+                e.gameObject.position.y += sourcePosition.end.y - collidedPosition.start.y;
+                break;
+            case "bottom":
+                e.gameObject.position.y -= collidedPosition.end.y - sourcePosition.start.y;
+                break;
+        }
+    }
 
     update()
     {
@@ -20,7 +46,12 @@ class Enemy extends GameObject
             this.isActive = false;
         }
         
-        let playerPosition = gameObjects["rocket"].position;
+        let player = GameObject.getObjectByTag("player");
+        if (player == null)
+        {
+            return;
+        }
+        let playerPosition = player.position;
 
         let direction = {x: playerPosition.x - this.position.x, y: playerPosition.y - this.position.y};
         let targetAngle = Math.atan2(direction.y, direction.x) / DEG_TO_RADIANS + 180;

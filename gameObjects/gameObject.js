@@ -6,6 +6,8 @@ var GameObject = /** @class */ (function () {
         this.scale = 1;
         this.rotation = 0;
         this.isActive = true;
+        this.layer = "default";
+        this.tag = "none";
     }
     GameObject.prototype.onCollision = function (e) {
     };
@@ -30,6 +32,14 @@ var GameObject = /** @class */ (function () {
         instance.scale = original.scale;
         instance.rotation = original.rotation;
         return instance;
+    };
+    GameObject.getObjectByTag = function (tag) {
+        for (var key in gameObjects) {
+            if (gameObjects[key].tag == tag) {
+                return gameObjects[key];
+            }
+        }
+        return null;
     };
     return GameObject;
 }());

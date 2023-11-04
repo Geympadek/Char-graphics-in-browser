@@ -20,11 +20,37 @@ var Enemy = /** @class */ (function (_super) {
         _this.hp = hp;
         return _this;
     }
+    Enemy.prototype.onCollision = function (e) {
+        if (e.gameObject.tag == "player") {
+            e.gameObject.hp -= deltaTime;
+            return;
+        }
+        var sourcePosition = this.getRealCollider().getGlobalPosition();
+        var collidedPosition = e.gameObject.getRealCollider().getGlobalPosition();
+        switch (e.collision) {
+            case "right":
+                e.gameObject.position.x -= collidedPosition.end.x - sourcePosition.start.x;
+                break;
+            case "left":
+                e.gameObject.position.x += sourcePosition.end.x - collidedPosition.start.x;
+                break;
+            case "top":
+                e.gameObject.position.y += sourcePosition.end.y - collidedPosition.start.y;
+                break;
+            case "bottom":
+                e.gameObject.position.y -= collidedPosition.end.y - sourcePosition.start.y;
+                break;
+        }
+    };
     Enemy.prototype.update = function () {
         if (this.hp <= 0) {
             this.isActive = false;
         }
-        var playerPosition = gameObjects["rocket"].position;
+        var player = GameObject.getObjectByTag("player");
+        if (player == null) {
+            return;
+        }
+        var playerPosition = player.position;
         var direction = { x: playerPosition.x - this.position.x, y: playerPosition.y - this.position.y };
         var targetAngle = Math.atan2(direction.y, direction.x) / DEG_TO_RADIANS + 180;
         var angle = this.rotation % 360;
