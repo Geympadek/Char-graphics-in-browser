@@ -1,1 +1,1 @@
-<h1>Ascii game!</h1>
+<h1 style="color:blue">Ascii game!</h1>
