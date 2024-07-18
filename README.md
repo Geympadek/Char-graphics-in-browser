@@ -2,4 +2,5 @@
 <p>It's my first major project in JS</p>
 
 <p>Graphics fully consist of ascii characters!</p>
+:[
 :D :D
